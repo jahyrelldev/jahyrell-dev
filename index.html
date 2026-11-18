@@ -496,45 +496,47 @@
 
 
 <script>
-  let savedScrollPosition = 0;
+document.addEventListener("DOMContentLoaded", () => {
+    let savedScroll = 0;
 
-  // Save the scroll position when opening an image
-  document.addEventListener("click", function (event) {
-    const link = event.target.closest("a[href^='#']");
+    // OPEN MODAL
+    document.addEventListener("click", (event) => {
+        const link = event.target.closest("a[href^='#']");
+        if (!link) return;
 
-    if (!link) return;
+        const id = link.getAttribute("href").substring(1);
+        const modal = document.getElementById(id);
 
-    const targetId = link.getAttribute("href").substring(1);
-    const target = document.getElementById(targetId);
+        // Only intercept links that open an image modal
+        if (modal && modal.classList.contains("image-modal")) {
+            event.preventDefault();
 
-    if (target && target.classList.contains("image-modal")) {
-      savedScrollPosition = window.scrollY;
-    }
+            savedScroll = window.scrollY;
 
-    // Handle closing the image modal
-    if (
-      link.classList.contains("modal-close") ||
-      link.classList.contains("modal-backdrop")
-    ) {
-      event.preventDefault();
+            modal.classList.add("is-open");
 
-      // Navigate to the original section to remove :target
-      history.replaceState(null, "", "#" + targetId);
+            document.body.style.overflow = "hidden";
+        }
 
-      // Remove the hash completely and close the modal
-      history.replaceState(
-        null,
-        "",
-        window.location.pathname + window.location.search
-      );
+        // CLOSE MODAL
+        if (
+            link.classList.contains("modal-close") ||
+            link.classList.contains("modal-backdrop")
+        ) {
+            event.preventDefault();
 
-      // Restore the original scroll position
-      window.scrollTo({
-        top: savedScrollPosition,
-        behavior: "instant"
-      });
-    }
-  });
+            const currentModal = link.closest(".image-modal");
+
+            if (currentModal) {
+                currentModal.classList.remove("is-open");
+            }
+
+            document.body.style.overflow = "";
+
+            window.scrollTo(0, savedScroll);
+        }
+    });
+});
 </script>
 
 </body>
