@@ -505,25 +505,29 @@
     const targetId = link.getAttribute("href").slice(1);
     const target = document.getElementById(targetId);
 
-    // Save the current scroll position when opening an image
+    // Save scroll position when opening an image modal
     if (target && target.classList.contains("image-modal")) {
       savedScrollPosition = window.scrollY;
     }
 
-    // Close the image without jumping to another section
+    // Close the modal without jumping to another section
     if (
       link.classList.contains("modal-close") ||
       link.classList.contains("modal-backdrop")
     ) {
       event.preventDefault();
 
+      // Remove the modal hash from the URL
       history.replaceState(
         null,
         "",
         window.location.pathname + window.location.search
       );
 
-      window.scrollTo(0, savedScrollPosition);
+      // Restore the original scroll position
+      requestAnimationFrame(() => {
+        window.scrollTo(0, savedScrollPosition);
+      });
     }
   });
 </script>
