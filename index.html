@@ -494,5 +494,39 @@
   </div>
 </footer>
 
+
+<script>
+  let savedScrollPosition = 0;
+
+  document.addEventListener("click", function (event) {
+    const link = event.target.closest("a[href^='#']");
+    if (!link) return;
+
+    const targetId = link.getAttribute("href").slice(1);
+    const target = document.getElementById(targetId);
+
+    // Save the current scroll position when opening an image
+    if (target && target.classList.contains("image-modal")) {
+      savedScrollPosition = window.scrollY;
+    }
+
+    // Close the image without jumping to another section
+    if (
+      link.classList.contains("modal-close") ||
+      link.classList.contains("modal-backdrop")
+    ) {
+      event.preventDefault();
+
+      history.replaceState(
+        null,
+        "",
+        window.location.pathname + window.location.search
+      );
+
+      window.scrollTo(0, savedScrollPosition);
+    }
+  });
+</script>
+
 </body>
 </html>
