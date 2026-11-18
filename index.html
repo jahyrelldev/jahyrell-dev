@@ -494,50 +494,5 @@
   </div>
 </footer>
 
-
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-    let savedScroll = 0;
-
-    // OPEN MODAL
-    document.addEventListener("click", (event) => {
-        const link = event.target.closest("a[href^='#']");
-        if (!link) return;
-
-        const id = link.getAttribute("href").substring(1);
-        const modal = document.getElementById(id);
-
-        // Only intercept links that open an image modal
-        if (modal && modal.classList.contains("image-modal")) {
-            event.preventDefault();
-
-            savedScroll = window.scrollY;
-
-            modal.classList.add("is-open");
-
-            document.body.style.overflow = "hidden";
-        }
-
-        // CLOSE MODAL
-        if (
-            link.classList.contains("modal-close") ||
-            link.classList.contains("modal-backdrop")
-        ) {
-            event.preventDefault();
-
-            const currentModal = link.closest(".image-modal");
-
-            if (currentModal) {
-                currentModal.classList.remove("is-open");
-            }
-
-            document.body.style.overflow = "";
-
-            window.scrollTo(0, savedScroll);
-        }
-    });
-});
-</script>
-
 </body>
 </html>
