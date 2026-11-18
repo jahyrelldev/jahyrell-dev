@@ -498,26 +498,30 @@
 <script>
   let savedScrollPosition = 0;
 
+  // Save the scroll position when opening an image
   document.addEventListener("click", function (event) {
     const link = event.target.closest("a[href^='#']");
+
     if (!link) return;
 
-    const targetId = link.getAttribute("href").slice(1);
+    const targetId = link.getAttribute("href").substring(1);
     const target = document.getElementById(targetId);
 
-    // Save scroll position when opening an image modal
     if (target && target.classList.contains("image-modal")) {
       savedScrollPosition = window.scrollY;
     }
 
-    // Close the modal without jumping to another section
+    // Handle closing the image modal
     if (
       link.classList.contains("modal-close") ||
       link.classList.contains("modal-backdrop")
     ) {
       event.preventDefault();
 
-      // Remove the modal hash from the URL
+      // Navigate to the original section to remove :target
+      history.replaceState(null, "", "#" + targetId);
+
+      // Remove the hash completely and close the modal
       history.replaceState(
         null,
         "",
@@ -525,8 +529,9 @@
       );
 
       // Restore the original scroll position
-      requestAnimationFrame(() => {
-        window.scrollTo(0, savedScrollPosition);
+      window.scrollTo({
+        top: savedScrollPosition,
+        behavior: "instant"
       });
     }
   });
